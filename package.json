@@ -54,7 +54,8 @@
     "react-hook-form": "7.45.4",
     "sharp": "0.32.6",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "@payloadcms/plugin-cloud-storage": "3.20.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
