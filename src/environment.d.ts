@@ -14,6 +14,10 @@ declare global {
       R2_ENDPOINT: string
 
       CUSTOMER_ID_APPEND_FORMS: string
+      
+      // RevenueCat
+      NEXT_PUBLIC_REVENUECAT_PUBLIC_SDK_KEY: string
+      REVENUECAT_SECRET_API_KEY: string
     }
   }
 }

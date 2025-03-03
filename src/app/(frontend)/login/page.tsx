@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useSubscription } from '@/hooks/useSubscription'
 
 type FormValues = {
   email: string
@@ -26,6 +27,7 @@ export default function LoginPage() {
   const [error, setError] = React.useState<string | null>(null)
 
   const { handleAuthChange } = useUserContext()
+  const { isSubscribed, isLoading: isSubscriptionLoading } = useSubscription()
 
   const handleLogin = async (values: FormValues) => {
     try {
@@ -43,7 +45,13 @@ export default function LoginPage() {
       }
 
       handleAuthChange()
-      router.push('/bookings')
+      
+      // After successful login, check subscription status
+      if (!isSubscribed && !isSubscriptionLoading) {
+        router.push('/subscribe')
+      } else {
+        router.push('/bookings')
+      }
     } catch (err) {
       console.error(err)
       setError(err.message)

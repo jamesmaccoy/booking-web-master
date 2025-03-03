@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { SearchIcon } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { useUserContext } from '@/context/UserContext'
+import { AdminLink } from '@/components/AdminLink'
 
 export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   const navItems = data?.navItems || []
@@ -18,6 +19,13 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   return (
     <nav className="flex gap-3 items-center">
       {navItems.map(({ link }, i) => {
+        if (link.url === '/admin') {
+          return (
+            <AdminLink key={i} className={buttonVariants({ variant: "link" })}>
+              {link.label}
+            </AdminLink>
+          )
+        }
         return <CMSLink key={i} {...link} appearance="link" />
       })}
       <Link href="/search">

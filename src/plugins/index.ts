@@ -76,7 +76,7 @@ export const plugins: Plugin[] = [
         create: authenticated,
       },
       hooks: {
-        beforeValidate: [addCustomerToForm(process.env.CUSTOMER_ID_APPEND_FORMS.split(','))],
+        beforeValidate: [addCustomerToForm(process.env.CUSTOMER_ID_APPEND_FORMS ? process.env.CUSTOMER_ID_APPEND_FORMS.split(',') : [])],
       },
       fields: ({ defaultFields }) => {
         return [
