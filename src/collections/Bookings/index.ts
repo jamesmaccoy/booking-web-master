@@ -6,14 +6,14 @@ import { slugField } from '@/fields/slug'
 import { CollectionConfig } from 'payload'
 import { adminOrSelfOrGuests } from './access/adminOrSelfOrGuests'
 
-export const Policy: CollectionConfig = {
-  slug: 'policys',
+export const Booking: CollectionConfig = {
+  slug: 'bookings',
   labels: {
-    singular: 'Policy',
-    plural: 'Policys',
+    singular: 'Booking',
+    plural: 'Bookings',
   },
   typescript: {
-    interface: 'Policy',
+    interface: 'Booking',
   },
   admin: {
     useAsTitle: 'title',
