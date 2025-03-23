@@ -32,8 +32,8 @@ export default function SubscribePage() {
   const loadOfferings = async () => {
     try {
       const offerings = await Purchases.getSharedInstance().getOfferings()
-      if (offerings.all.customise.availablePackages) {
-        setOfferings(offerings.all.customise.availablePackages)
+      if (offerings.current && offerings.current.availablePackages.length > 0) {
+        setOfferings(offerings.current.availablePackages)
       }
       setLoading(false)
     } catch (err) {
@@ -46,21 +46,21 @@ export default function SubscribePage() {
   const handlePurchase = async (pkg: Package) => {
     try {
       await Purchases.getSharedInstance().purchase({
-        rcPackage: pkg,
-      })
-      router.push('/admin')
+        rcPackage: pkg
+      });
+      router.push('/admin');
     } catch (error) {
       if (error.code === 'RECEIPT_ALREADY_IN_USE') {
-        router.push('/admin')
-        return
+        router.push('/admin');
+        return;
       }
       if (error.code === 'CANCELLED') {
-        return
+        return;
       }
-      console.error('Error purchasing package:', error)
-      setError('Failed to complete purchase. Please try again.')
+      console.error('Error purchasing package:', error);
+      setError('Failed to complete purchase. Please try again.');
     }
-  }
+  };
 
   if (!currentUser) {
     return (
@@ -89,8 +89,7 @@ export default function SubscribePage() {
     )
   }
 
-  const hasActiveSubscription =
-    customerInfo && Object.keys(customerInfo.entitlements.active).length > 0
+  const hasActiveSubscription = customerInfo && Object.keys(customerInfo.entitlements.active).length > 0
 
   if (hasActiveSubscription) {
     // Redirect to admin instead of showing subscription active message
@@ -108,7 +107,9 @@ export default function SubscribePage() {
             <div key={pkg.identifier} className="border rounded-lg p-4">
               <h2 className="text-xl font-semibold mb-2">{product.displayName}</h2>
               <p className="mb-4">{product.description}</p>
-              <p className="text-lg font-bold mb-4">{product.currentPrice.formattedPrice}</p>
+              <p className="text-lg font-bold mb-4">
+                {product.currentPrice.formattedPrice}
+              </p>
               <button
                 onClick={() => handlePurchase(pkg)}
                 className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
