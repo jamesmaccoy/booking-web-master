@@ -66,7 +66,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    policys: Policy;
+    bookings: Booking;
     pages: Page;
     posts: Post;
     media: Media;
@@ -82,7 +82,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    policys: PolicysSelect<false> | PolicysSelect<true>;
+    bookings: BookingsSelect<false> | BookingsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -136,9 +136,9 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "policys".
+ * via the `definition` "bookings".
  */
-export interface Policy {
+export interface Booking {
   id: number;
   title: string;
   customer?: (number | null) | User;
@@ -834,8 +834,8 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'policys';
-        value: number | Policy;
+        relationTo: 'bookings';
+        value: number | Booking;
       } | null)
     | ({
         relationTo: 'pages';
@@ -917,9 +917,9 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "policys_select".
+ * via the `definition` "bookings_select".
  */
-export interface PolicysSelect<T extends boolean = true> {
+export interface BookingsSelect<T extends boolean = true> {
   title?: T;
   customer?: T;
   guests?: T;
