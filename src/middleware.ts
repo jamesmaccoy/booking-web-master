@@ -30,20 +30,10 @@ export async function middleware(request: NextRequest) {
   // Check subscription status for admin routes 
   const subscriptionCookie = request.cookies.get('rc-subscription')
   if (pathname.startsWith('/admin') && !subscriptionCookie?.value) {
-    // Clear any existing subscription cookie to prevent caching issues
-    const response = NextResponse.redirect(new URL('/subscribe', request.url))
-    response.cookies.delete('rc-subscription')
-    return response
+    return NextResponse.redirect(new URL('/subscribe', request.url))
   }
 
-  // Add cache control headers for protected routes
-  const response = NextResponse.next()
-  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-  response.headers.set('Pragma', 'no-cache')
-  response.headers.set('Expires', '0')
-  response.headers.set('Surrogate-Control', 'no-store')
-
-  return response
+  return NextResponse.next()
 }
 
 export const config = {
