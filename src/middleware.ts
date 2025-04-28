@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSideURL } from './utilities/getURL'
+import { Purchases } from '@revenuecat/purchases-js'
 
 // Paths that require authentication
 const PROTECTED_PATHS = ['/admin']
@@ -28,9 +29,43 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check subscription status for admin routes 
-  const subscriptionCookie = request.cookies.get('rc-subscription')
-  if (pathname.startsWith('/admin') && !subscriptionCookie?.value) {
-    return NextResponse.redirect(new URL('/subscribe', request.url))
+  if (pathname.startsWith('/admin')) {
+    try {
+      // Get user ID from the auth token
+      const token = authCookie.value
+      const userResponse = await fetch(`${getServerSideURL()}/api/users/me`, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      })
+      
+      if (!userResponse.ok) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+
+      const { user } = await userResponse.json()
+      
+      if (!user?.id) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
+
+      // Initialize RevenueCat with the user's ID
+      const purchases = Purchases.configure(
+        process.env.NEXT_PUBLIC_REVENUECAT_PUBLIC_SDK_KEY!,
+        String(user.id)
+      )
+
+      // Check if user has active entitlements
+      const customerInfo = await purchases.getCustomerInfo()
+      const hasActiveSubscription = Object.keys(customerInfo.entitlements.active).length > 0
+
+      if (!hasActiveSubscription) {
+        return NextResponse.redirect(new URL('/subscribe', request.url))
+      }
+    } catch (error) {
+      console.error('Error checking subscription status:', error)
+      return NextResponse.redirect(new URL('/subscribe', request.url))
+    }
   }
 
   return NextResponse.next()
