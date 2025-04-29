@@ -110,6 +110,8 @@ export const RevenueCatProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       const purchases = Purchases.getSharedInstance()
       const info = await purchases.getCustomerInfo()
+      console.log('RevenueCat Customer ID:', info.originalAppUserId)
+      console.log('Active Entitlements:', Object.keys(info.entitlements.active))
       return Object.keys(info.entitlements.active).length > 0
     } catch (err) {
       console.error('Failed to check customer status:', err)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSideURL } from './utilities/getURL'
 import { Purchases } from '@revenuecat/purchases-js'
+import { RevenueCatProvider } from './providers/RevenueCat'
 
 // Paths that require authentication
 const PROTECTED_PATHS = ['/admin']
@@ -57,10 +58,13 @@ export async function middleware(request: NextRequest) {
 
       // Check if user has active entitlements
       const customerInfo = await purchases.getCustomerInfo()
+      console.log('RevenueCat Customer ID:', customerInfo.originalAppUserId)
+      console.log('Active Entitlements:', Object.keys(customerInfo.entitlements.active))
       const hasActiveSubscription = Object.keys(customerInfo.entitlements.active).length > 0
 
       if (!hasActiveSubscription) {
         return NextResponse.redirect(new URL('/subscribe', request.url))
+        console.log(RevenueCatProvider)
       }
     } catch (error) {
       console.error('Error checking subscription status:', error)
