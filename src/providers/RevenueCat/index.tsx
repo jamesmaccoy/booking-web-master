@@ -14,6 +14,7 @@ type RevenueCatContextType = {
   error: Error | null
   refreshCustomerInfo: () => Promise<CustomerInfo | void>
   restorePurchases: () => Promise<CustomerInfo | void>
+  isActiveCustomer: (userId: string) => Promise<boolean>
 }
 
 const RevenueCatContext = createContext<RevenueCatContextType | undefined>(undefined)
@@ -103,6 +104,21 @@ export const RevenueCatProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   }
 
+  const isActiveCustomer = async (userId: string): Promise<boolean> => {
+    if (typeof window === 'undefined') return false
+
+    try {
+      const purchases = Purchases.getSharedInstance()
+      const info = await purchases.getCustomerInfo()
+      console.log('RevenueCat Customer ID:', info.originalAppUserId)
+      console.log('Active Entitlements:', Object.keys(info.entitlements.active))
+      return Object.keys(info.entitlements.active).length > 0
+    } catch (err) {
+      console.error('Failed to check customer status:', err)
+      return false
+    }
+  }
+
   return (
     <RevenueCatContext.Provider
       value={{
@@ -112,6 +128,7 @@ export const RevenueCatProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         error,
         refreshCustomerInfo,
         restorePurchases,
+        isActiveCustomer,
       }}
     >
       {children}
